@@ -61,6 +61,59 @@ def calculate_price():
     )
 
     return jsonify({"total_price": total_price})
+@app.route('/')
+def index():
+    return '''
+    <!doctype html>
+    <html>
+      <head>
+        <title>Pricing Calculator</title>
+      </head>
+      <body>
+        <h1>Pricing Calculator</h1>
+        <form action="/result" method="post">
+          <label for="revenue_tier">Revenue Tier:</label>
+          <select name="revenue_tier" id="revenue_tier">
+            <option value="0-90k">£0-90k</option>
+            <option value="90k-300k">£90k-300k</option>
+            <option value="300k-1M">£300k-1M</option>
+            <option value="1M+">£1M+</option>
+          </select>
+          <br><br>
+          <label for="num_marketplaces">Number of Marketplaces:</label>
+          <input type="number" id="num_marketplaces" name="num_marketplaces" value="1">
+          <br><br>
+          <label for="software_used">Uses Software (true/false):</label>
+          <input type="text" id="software_used" name="software_used" value="true">
+          <br><br>
+          <label for="multi_currency">Multi-currency (true/false):</label>
+          <input type="text" id="multi_currency" name="multi_currency" value="false">
+          <br><br>
+          <label for="stock_management">Stock management (true/false):</label>
+          <input type="text" id="stock_management" name="stock_management" value="false">
+          <br><br>
+          <label for="extra_payroll">Extra payroll employees:</label>
+          <input type="number" id="extra_payroll" name="extra_payroll" value="0">
+          <br><br>
+          <label for="vat_filings">VAT filings:</label>
+          <input type="number" id="vat_filings" name="vat_filings" value="0">
+          <br><br>
+          <label for="management_accounts">Management accounts:</label>
+          <input type="number" id="management_accounts" name="management_accounts" value="0">
+          <br><br>
+          <label for="advisory_calls">Advisory calls:</label>
+          <input type="number" id="advisory_calls" name="advisory_calls" value="0">
+          <br><br>
+          <input type="submit" value="Calculate Price">
+        </form>
+      </body>
+    </html>
+    '''
+
+@app.route('/result', methods=['POST'])
+def result():
+    # Get form data and convert where needed
+    revenue_tier = request.form.get("revenue_ti
 
 if __name__ == '__main__':
     import os
