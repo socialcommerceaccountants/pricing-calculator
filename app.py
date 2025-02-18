@@ -12,7 +12,7 @@ pricing_tiers = {
 
 # Multipliers
 marketplace_multiplier = 0.025  # 2.5% per extra marketplace
-software_penalty = 0.05  # 5% increase if no automation software is used
+software_penalty = 0.05         # 5% increase if no automation software is used
 multi_currency_multiplier = 0.03  # 3% if multi-currency is applicable
 stock_management_multiplier = 0.04  # 4% for stock/inventory management
 
@@ -24,6 +24,7 @@ additional_services = {
     "advisory_calls": 75
 }
 
+# API endpoint for JSON-based calculation
 @app.route('/calculate_price', methods=['POST'])
 def calculate_price():
     data = request.json
@@ -61,6 +62,8 @@ def calculate_price():
     )
 
     return jsonify({"total_price": total_price})
+
+# UI: Display the form for input
 @app.route('/')
 def index():
     return '''
@@ -110,14 +113,10 @@ def index():
     </html>
     '''
 
-@app.route('/result', methods=['POST'])
-def result():
-    # Get form data and convert where needed
-    revenue_tier = request.form.get("revenue_tier")
+# UI: Process form submission and display the result
 @app.route('/result', methods=['POST'])
 def result():
     try:
-        # Get and process form data
         revenue_tier = request.form.get("revenue_tier")
         base_price = pricing_tiers.get(revenue_tier, 0)
 
@@ -150,10 +149,6 @@ def result():
             stock_fee + payroll_fee + vat_fee + management_fee + advisory_fee
         )
 
-        # Log the calculated total for debugging
-        print("Calculated total_price:", total_price)
-
-        # Build the HTML response as a single string
         response_html = (
             "<!doctype html>"
             "<html><head><title>Pricing Calculator Result</title></head>"
@@ -164,7 +159,6 @@ def result():
         )
         return response_html
     except Exception as e:
-        print("Error processing request:", e)
         return f"Error processing request: {e}"
 
 if __name__ == '__main__':
