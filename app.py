@@ -12,7 +12,7 @@ pricing_tiers = {
 
 # Multipliers
 marketplace_multiplier = 0.025  # 2.5% per extra marketplace
-software_penalty = 0.05  # 5% increase if no automation software is used
+software_penalty = 0.05         # 5% increase if no automation software is used
 multi_currency_multiplier = 0.03  # 3% if multi-currency is applicable
 stock_management_multiplier = 0.04  # 4% for stock/inventory management
 
@@ -43,28 +43,4 @@ def calculate_price():
     stock_management = data.get("stock_management", False)
     stock_fee = base_price * stock_management_multiplier if stock_management else 0
 
-    payroll_count = max(0, data.get("extra_payroll", 0))
-    payroll_fee = payroll_count * additional_services["extra_payroll"]
-
-    vat_filings = max(0, data.get("vat_filings", 0))
-    vat_fee = vat_filings * additional_services["vat_filings"]
-
-    management_accounts = max(0, data.get("management_accounts", 0))
-    management_fee = management_accounts * additional_services["management_accounts"]
-
-    advisory_calls = max(0, data.get("advisory_calls", 0))
-    advisory_fee = advisory_calls * additional_services["advisory_calls"]
-
-    total_price = (
-        base_price + marketplace_fee + software_fee + multi_currency_fee +
-        stock_fee + payroll_fee + vat_fee + management_fee + advisory_fee
-    )
-
-    return jsonify({"total_price": total_price})
-
-
-if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 5000))
-    print("Using port:", port)  # This will help us confirm which port is used.
-    app.run(host='0.0.0.0', port=port, debug=True)
+    payroll_count = max(0, data.ge
