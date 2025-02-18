@@ -114,6 +114,58 @@ def index():
 def result():
     # Get form data and convert where needed
     revenue_tier = request.form.get("revenue_tier")
+@app.route('/result', methods=['POST'])
+def result():
+    try:
+        # Get and process form data
+        revenue_tier = request.form.get("revenue_tier")
+        base_price = pricing_tiers.get(revenue_tier, 0)
+
+        num_marketplaces = max(0, int(request.form.get("num_marketplaces", 1)) - 1)
+        marketplace_fee = base_price * marketplace_multiplier * num_marketplaces
+
+        software_used = request.form.get("software_used", "true").lower() == "true"
+        software_fee = 0 if software_used else base_price * software_penalty
+
+        multi_currency = request.form.get("multi_currency", "false").lower() == "true"
+        multi_currency_fee = base_price * multi_currency_multiplier if multi_currency else 0
+
+        stock_management = request.form.get("stock_management", "false").lower() == "true"
+        stock_fee = base_price * stock_management_multiplier if stock_management else 0
+
+        payroll_count = max(0, int(request.form.get("extra_payroll", 0)))
+        payroll_fee = payroll_count * additional_services["extra_payroll"]
+
+        vat_filings = max(0, int(request.form.get("vat_filings", 0)))
+        vat_fee = vat_filings * additional_services["vat_filings"]
+
+        management_accounts = max(0, int(request.form.get("management_accounts", 0)))
+        management_fee = management_accounts * additional_services["management_accounts"]
+
+        advisory_calls = max(0, int(request.form.get("advisory_calls", 0)))
+        advisory_fee = advisory_calls * additional_services["advisory_calls"]
+
+        total_price = (
+            base_price + marketplace_fee + software_fee + multi_currency_fee +
+            stock_fee + payroll_fee + vat_fee + management_fee + advisory_fee
+        )
+
+        # Log the calculated total for debugging
+        print("Calculated total_price:", total_price)
+
+        # Build the HTML response as a single string
+        response_html = (
+            "<!doctype html>"
+            "<html><head><title>Pricing Calculator Result</title></head>"
+            "<body>"
+            f"<h1>Total Price: £{total_price}</h1>"
+            "<p><a href='/'>Calculate Again</a></p>"
+            "</body></html>"
+        )
+        return response_html
+    except Exception as e:
+        print("Error processing request:", e)
+        return f"Error processing request: {e}"
 
 if __name__ == '__main__':
     import os
