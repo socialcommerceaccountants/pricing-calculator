@@ -62,5 +62,9 @@ def calculate_price():
 
     return jsonify({"total_price": total_price})
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    print("Using port:", port)  # This will help us confirm which port is used.
+    app.run(host='0.0.0.0', port=port, debug=True)
