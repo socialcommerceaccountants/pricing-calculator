@@ -113,7 +113,7 @@ def index():
 @app.route('/result', methods=['POST'])
 def result():
     # Get form data and convert where needed
-    revenue_tier = request.form.get("revenue_ti
+    revenue_tier = request.form.get("revenue_tier")
 
 if __name__ == '__main__':
     import os
